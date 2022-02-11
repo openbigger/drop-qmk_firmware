@@ -1,5 +1,4 @@
 # project specific files
-SRC = matrix.c
 SRC += config_led.c
 SRC += spi.c
 SRC += usb.c
@@ -7,8 +6,6 @@ SRC += usb.c
 #For platform and packs
 ARM_ATSAM = SAMD51J18A
 MCU = cortex-m4
-
-CUSTOM_MATRIX = yes
 
 # Build Options
 #   comment out to disable the options.
@@ -31,8 +28,9 @@ AUDIO_ENABLE = no           # Audio output on port C6
 FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 HD44780_ENABLE = no         # Enable support for HD44780 based LCDs (+400)
 VIRTSER_ENABLE = no         # USB Serial Driver
-RAW_ENABLE = yes            # Raw device
+RAW_ENABLE = no             # Raw device
 AUTO_SHIFT_ENABLE = no      # Auto Shift
+DEBOUNCE_TYPE = eager_pk
 
 # Custom RGB matrix handling
 RGB_MATRIX_ENABLE = custom
