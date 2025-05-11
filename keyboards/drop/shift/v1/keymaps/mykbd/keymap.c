@@ -17,51 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include "lib/led_framework/md_rgb_matrix.h"
-
-enum shift_v1_led_numbers  {
-    //0~17
-    KB_LED_ESC = 0,//checked
-    KB_LED_F1 = 1,//checked
-    KB_LED_DEL = 13,
-    KB_LED_HOME = 14,//checked
-    //18~35
-    KB_LED_1 = 19,//checked
-    KB_LED_2 = 20,//checked
-    KB_LED_EQL = 30,//checked
-    KB_LED_NUM= 32,
-    //36~53
-    KB_LED_TAB = 36,//checked
-    KB_LED_R = 40,//checked
-    KB_LED_P7 = 50,//checked
-    //54~71
-    KB_LED_CAPS = 54,
-    KB_LED_H = 60,//checked
-    KB_LED_PPLS = 70,//checked
-    //71~87
-    KB_LED_Z = 72,
-    KB_LED_DOT = 80,//checked
-    KB_LED_RSFT = 82,
-    KB_LED_UP = 83,
-    //88~98
-    KB_LED_LALT = 90,//checked.
-    KB_LED_SPC = 91,
-    KB_LED_PDOT = 98,//checked keyboard end
-    //99~118
-    EG_LED_L_UP = 99,
-    EG_LED_R_UP = 121,
-    EG_LED_L_DOWN = 130,
-    EG_LED_R_DOWN = 154,
-    //105 between f4 f5
-    //108 f7
-    //115 between f12 del
-    //124 between PrtSc -
-    //134 between right 0
-    //160 `  
-    //163~165
-    IND_LED_UP = 163,//cap
-    IND_LED_MID = 164,//num
-    IND_LED_DOWN = 165,//scroll
-};
+#include "openbigger.h"
 
 enum md_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase                                   //Working
@@ -162,35 +118,15 @@ void keyboard_post_init_user(void) {
     debug_enable = true;
 }
 
-#define MAX_TRACK_KEYS 5 // 最多同时记录多少个按下的键
-
-typedef struct {
-    uint8_t led_index;
-    uint32_t timer_start;
-    bool active;
-} led_flash_t;
-static led_flash_t flashes[MAX_TRACK_KEYS];
+//static led_flash_t flashes[MAX_TRACK_KEYS];
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
     static uint8_t scroll_effect = 0;
     //dprintf("Key pressed: %d, layer: %d\n", keycode, get_highest_layer(layer_state));
-    if (record->event.pressed) {
-        uint8_t row = record->event.key.row;
-        uint8_t col = record->event.key.col;
-        uint8_t led_index;
-        if (rgb_matrix_map_row_column_to_led(row, col, &led_index)) {
-            for (int i = 0; i < MAX_TRACK_KEYS; i++) {
-                if (!flashes[i].active) {
-                    flashes[i].led_index = led_index;
-                    flashes[i].timer_start = timer_read32();
-                    flashes[i].active = true;
-                    break;
-                }
-            }
-        }
+    if (!process_record_openbigger(keycode, record)) {
+        return false;
     }
-    
 
     switch (keycode) {
         case L_BRI ... U_T_AGCR:
@@ -440,95 +376,25 @@ led_instruction_t led_instructions[] = {
  *             The LED indication will be updated only if it has changed
  *             Return true if RGB LED indicators should be updated
  */ 
-void refresh_indicators_kb(void) {
-    //更新状态灯,它们本身亮
-    if(host_keyboard_led_state().caps_lock) {
-        rgb_matrix_set_color(KB_LED_CAPS, 0xFF, 0xFF, 0xFF);
-    }
-    if(host_keyboard_led_state().num_lock) {
-        rgb_matrix_set_color(KB_LED_NUM, 0xFF, 0xFF, 0xFF);
-    }
-    if(host_keyboard_led_state().scroll_lock) {
-        rgb_matrix_set_color(IND_LED_DOWN, 0xFF, 0xFF, 0xFF);
-    }
-} 
 
-void refresh_pressed_key_LED(void) {
-    for (int i = 0; i < MAX_TRACK_KEYS; i++) {
-        if (flashes[i].active) {
-            if (timer_elapsed32(flashes[i].timer_start) < 500) {
-                // 在闪烁期间，点亮橙色
-                rgb_matrix_set_color(flashes[i].led_index, 255, 128, 0);
-            } else {
-                // 超时后，停止闪烁
-                flashes[i].active = false;
-            }
-        }
-    }
-}
 
-static uint8_t offset = 0; // 流动偏移
-void my_rgb_matrix_splash(uint8_t start_led) {
-    for (uint8_t i = start_led; i < RGB_MATRIX_LED_COUNT; i++) {
-        if ((i + offset) % 10 < 5) {
-            rgb_matrix_set_color(i, 255, 20, 147); // 粉色
-        } else {
-            rgb_matrix_set_color(i, 0, 0, 0); // 黑掉
-        }
-    }
-    offset++; // 每次刷新偏移一下，造成流动效果
-}
 
 bool rgb_matrix_indicators_user(void) {
 
     uint8_t layer = get_highest_layer(layer_state);
+    //表示在默认层，win层
     if (layer == 0) {
-        rgb_matrix_set_color(IND_LED_DOWN, 255, 0, 0); //表示在默认层，win层
-        refresh_pressed_key_LED();
     }
+    //表示在中间层，mac层
     if (layer == 1) {
         my_rgb_matrix_splash(0);
-        rgb_matrix_set_color(IND_LED_MID, 255, 0, 0); //表示在中间层，mac层
-        refresh_pressed_key_LED();
     }
-
+    //表示在特殊调节层
     if (layer == 2) { 
-        for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
-            // 键盘全黑，底盘不变
-            if(i < EG_LED_L_UP) 
-            {
-                rgb_matrix_set_color(i, 0, 0, 0);
-            }else if(layer_state_is(1)){
-                my_rgb_matrix_splash(EG_LED_L_UP);
-            }
-            // 点亮希望亮的LED
-            if (i == KB_LED_DEL || i == KB_LED_DEL+1 || i == KB_LED_DEL+2||i == KB_LED_DEL+3||i == KB_LED_DEL+4
-                || i== KB_LED_NUM || i == KB_LED_NUM+1 || i == KB_LED_NUM+2||i == KB_LED_NUM+3||i == KB_LED_NUM +4
-                ||i==KB_LED_TAB || i== KB_LED_TAB+1 || i == KB_LED_TAB+2||i == KB_LED_TAB+3||i == KB_LED_TAB +4||i == KB_LED_TAB +8
-                || i== KB_LED_CAPS || i == KB_LED_CAPS+1 || i == KB_LED_CAPS+2||i == KB_LED_CAPS+3||i == KB_LED_CAPS +4||i == KB_LED_CAPS +7||i == KB_LED_CAPS +8
-                || i == KB_LED_Z|| i == KB_LED_Z+1 ||i == KB_LED_Z+3||i == KB_LED_Z +4||i == KB_LED_Z +5
-                ||i == KB_LED_SPC || i == KB_LED_SPC+1 )
-            {
-                rgb_matrix_set_color(i, 0, 0, 255); // 蓝色
-            } 
-            else if(i == KB_LED_1)
-            {
-                rgb_matrix_set_color(i, 255, 20, 147);
-            }
-            else {
-                //rgb_matrix_set_color(i, 0, 0, 0); // 
-            }
-        }
-        rgb_matrix_set_color(IND_LED_UP, 255, 0, 0); //表示在特殊调节层
-        refresh_pressed_key_LED();
+        rgb_light_keys();
     }
     refresh_indicators_kb();
+    refresh_indicators_layer(layer);
+    refresh_pressed_key_LED(flashes);
     return false;
 }
-
-/*
- * Rules for building the firmware.
- * 更改切换的pattern的颜色在：tmk_core/protocol/arm_atsam/md_rgb_matrix_programs.c
- * 试过了不行，似乎是写进键盘rom了
- */
-

@@ -1,0 +1,96 @@
+#pragma once
+
+#include "quantum.h"
+
+// Define all of LEDs
+enum shift_v1_led_numbers  {
+    //0~17
+    KB_LED_ESC = 0,//checked
+    KB_LED_F1 = 1,//checked
+    KB_LED_DEL = 13,
+    KB_LED_HOME = 14,//checked
+    //18~35
+    KB_LED_1 = 19,//checked
+    KB_LED_2 = 20,//checked
+    KB_LED_EQL = 30,//checked
+    KB_LED_NUM= 32,
+    //36~53
+    KB_LED_TAB = 36,//checked
+    KB_LED_R = 40,//checked
+    KB_LED_P7 = 50,//checked
+    //54~71
+    KB_LED_CAPS = 54,
+    KB_LED_H = 60,//checked
+    KB_LED_PPLS = 70,//checked
+    //71~87
+    KB_LED_Z = 72,
+    KB_LED_DOT = 80,//checked
+    KB_LED_RSFT = 82,
+    KB_LED_UP = 83,
+    //88~98
+    KB_LED_LALT = 90,//checked.
+    KB_LED_SPC = 91,
+    KB_LED_PDOT = 98,//checked keyboard end
+    //99~118
+    EG_LED_L_UP = 99,
+    EG_LED_R_UP = 121,
+    EG_LED_L_DOWN = 130,
+    EG_LED_R_DOWN = 154,
+    //105 between f4 f5
+    //108 f7
+    //115 between f12 del
+    //124 between PrtSc -
+    //134 between right 0
+    //160 `  
+    //163~165
+    IND_LED_UP = 163,//cap
+    IND_LED_MID = 164,//num
+    IND_LED_DOWN = 165,//scroll
+};
+
+#define MAX_TRACK_KEYS 5 // 最多同时记录多少个按下的键
+
+typedef struct {
+    uint8_t led_index;
+    uint32_t timer_start;
+    bool active;
+} led_flash_t;
+extern led_flash_t flashes[MAX_TRACK_KEYS];
+
+void refresh_indicators_kb(void);//键盘指示灯，大写锁定等按下后点亮自己
+void refresh_indicators_layer(uint8_t layer_num);//三个小灯改为layer指示灯，在哪一层亮哪个灯
+void refresh_pressed_key_LED(led_flash_t *f);
+void rgb_light_keys(void);//调节层的灯光布局
+
+void my_rgb_matrix_splash(uint8_t start_led);
+
+//weak
+bool process_record_openbigger(uint16_t keycode, keyrecord_t *record);
+
+/*
+#define RGB_AZURE       0x99, 0xF5, 0xFF    // 天蓝色 / 蔚蓝色
+#define RGB_BLACK       0x00, 0x00, 0x00    // 黑色
+#define RGB_BLUE        0x00, 0x00, 0xFF    // 蓝色
+#define RGB_CHARTREUSE  0x80, 0xFF, 0x00    // 黄绿色 / 查特酒绿
+#define RGB_CORAL       0xFF, 0x7C, 0x4D    // 珊瑚色
+#define RGB_CYAN        0x00, 0xFF, 0xFF    // 青色 / 蓝绿色
+#define RGB_GOLD        0xFF, 0xD9, 0x00    // 金色
+#define RGB_GOLDENROD   0xD9, 0xA5, 0x21    // 金菊色 / 金杆色
+#define RGB_GREEN       0x00, 0xFF, 0x00    // 绿色
+#define RGB_MAGENTA     0xFF, 0x00, 0xFF    // 洋红色 / 品红色
+#define RGB_ORANGE      0xFF, 0x80, 0x00    // 橙色
+#define RGB_PINK        0xFF, 0x80, 0xBF    // 粉色
+#define RGB_PURPLE      0x7A, 0x00, 0xFF    // 紫色
+#define RGB_RED         0xFF, 0x00, 0x00    // 红色
+#define RGB_SPRINGGREEN 0x00, 0xFF, 0x80    // 春绿色
+#define RGB_TEAL        0x00, 0x80, 0x80    // 蓝绿色 / 水鸭色
+#define RGB_TURQUOISE   0x47, 0x6E, 0x6A    // 青绿松石色
+#define RGB_WHITE       0xFF, 0xFF, 0xFF    // 白色
+#define RGB_YELLOW      0xFF, 0xFF, 0x00    // 黄色
+#define RGB_OFF         RGB_BLACK           // 关闭（黑色）
+*/
+//#define RGB_PINK_DARKER      0xFF, 0x80, 0xC0   // 代码粉, AI粉255, 20, 147
+#define RGB_PINK_DARKER      0xE0, 0x60, 0xA0   // 深粉色
+#define RGB_PINK_BERRY       0xC0, 0x40, 0x80    // 莓果粉
+#define RGB_PURPLE_DARKER    0x60, 0x00, 0xC0   // 深紫色
+#define RGB_PURPLE_DEEPER    0x80, 0x00, 0xff   // 更浓的紫
