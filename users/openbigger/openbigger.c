@@ -3,6 +3,7 @@
 #include "openbigger_keycodes.h"
 
 led_flash_t flashes[MAX_TRACK_KEYS];
+bool is_capslock = false;
 //os_variant_t current_os = OS_MACOS;//OS_UNSURE;
 /*想改成自动检测os没成功 放这里，残留一阵。需要include osdetect.h
 bool process_detected_host_os_kb(os_variant_t detected_os) {
@@ -33,6 +34,13 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
                 }
             }
         }
+    }
+
+    if (keycode == KC_CAPS) {
+        if (record->event.pressed) {
+            is_capslock = !is_capslock;
+        }
+        return true;
     }
     
     switch (keycode) {
@@ -83,7 +91,7 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
 //===================================
 void refresh_indicators_kb(void) {
     //更新状态灯,它们本身亮
-    if(host_keyboard_led_state().caps_lock) {
+    if((host_keyboard_led_state().caps_lock)||is_capslock) {
         rgb_matrix_set_color(KB_LED_CAPS, RGB_SPRINGGREEN);
     }
     if(host_keyboard_led_state().num_lock) {
