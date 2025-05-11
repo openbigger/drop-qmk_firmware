@@ -7,6 +7,9 @@
 [![Last Commit](https://img.shields.io/github/last-commit/openbigger/drop-qmk_firmware?style=flat-square)](https://github.com/openbigger/drop-qmk_firmware/commits)
 [![License](https://img.shields.io/badge/license-Open%20Source-blue?style=flat-square)]()
 [![Powered by ChatGPT](https://img.shields.io/badge/🤖_-Code_with_GPT-10a37f?style=flat-square&logo=openai&logoColor=white)](https://openai.com/chatgpt)
+[![Version](https://img.shields.io/badge/version-v1.1-blue)](https://github.com/openbigger/drop-qmk_firmware)
+[![Platform](https://img.shields.io/badge/platform-Mac%20%7C%20Win-lightgrey)]()
+
 
 > 🛠 本分支基于 [`drop_led`](https://github.com/Massdrop/qmk_firmware/tree/feature/riot_xap/users/drop_led) 用户模块进行深度定制，适配win和macOS平台、增强灯效控制、优化默认布局。
 
@@ -65,8 +68,9 @@ users/openbigger/
 | 层编号 | 模式名称     | 功能描述                         |
 |--------|--------------|----------------------------------|
 | 0      | Win 默认层    | 标准 Windows 布局，默认灯效，win为紫色      |
-| 3      | Fn 调节层     | 控制灯效模式切换、亮度、平台切换 |
 | 1      | Mac 模式层    | 基层0层并兼容 macOS cmd，alt为紫色    |
+| 2      | Fn 调节层     | 控制灯效模式切换、亮度、平台切换 |
+
 
 ## 📥 使用说明
 
@@ -74,11 +78,12 @@ users/openbigger/
 # 编译固件
 qmk compile -kb drop/shift/v1 -km mykbd
 
-# 烧录到 Drop SHIFT
-qmk flash -kb drop/shift/v1 -km mykbd
+# Fn+b长按进入烧录模式 用drop的工具烧录到 Drop SHIFT
 
 # 启动串口调试（查看按键、灯效日志）
 qmk console
+# 常常不成功，需要进行python环境配置
+# 窗口中看dprintf发出的东西，记得带变量，只有字符串用send
 ``` 
 
 ---
