@@ -56,6 +56,9 @@ typedef struct {
     bool active;
 } led_flash_t;
 extern led_flash_t flashes[MAX_TRACK_KEYS];
+//extern os_variant_t current_os;//OS_UNSURE;
+
+extern bool is_splash;
 
 void refresh_indicators_kb(void);//键盘指示灯，大写锁定等按下后点亮自己
 void refresh_indicators_layer(uint8_t layer_num);//三个小灯改为layer指示灯，在哪一层亮哪个灯
@@ -94,3 +97,13 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record);
 #define RGB_PINK_BERRY       0xC0, 0x40, 0x80    // 莓果粉
 #define RGB_PURPLE_DARKER    0x60, 0x00, 0xC0   // 深紫色
 #define RGB_PURPLE_DEEPER    0x80, 0x00, 0xff   // 更浓的紫
+#define RGB_ORANGE_RICH  0xFF, 0x50, 0x00  // 更正的橙色（亮但不黄）
+
+#define RGB_MOVE_RING      0xFA, 0x11, 0x4F   // 活动（红色）
+#define RGB_EXERCISE_RING  0xA6, 0xFF, 0x00   // 锻炼（绿色）
+#define RGB_STAND_RING     0x00, 0xFF, 0xF6   // 站立（蓝色）
+#define RGB_DUOLINGO_GREEN  0x66, 0xE6, 0x64  // 多邻国绿 R: 102, G: 230, B: 100
+#define RGB_DUOLINGO_SOFT_GREEN  0x66, 0xCC, 0x66
+
+#define STR_HELLO_MM "Hello 毛毛! 欢迎使用 OpenBigger 键盘."
+#define STR_GO_TO_DIE "go to hell~ しねえ、死ね、死ね！"
