@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include "lib/led_framework/md_rgb_matrix.h"
 #include "openbigger.h"
+#include "openbigger_keycodes.h"
 
+/*移动到open bigger keycodes
 enum md_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase                                   //Working
     L_BRD,              //LED Brightness Decrease                                   //Working
@@ -45,7 +47,7 @@ enum md_keycodes {
     DBG_FAC,            //DEBUG Factory light testing (All on white)
     MD_BOOT             //Restart into bootloader after hold timeout                //Working
 };
-
+*/
 // TODO: Remove adapter to "old" layout macro
 #define LAYOUT( \
     K01, K02, K03, K04, K05, K06, K07, K08, K09, K10, K11, K12, K13, K14, K15, K16, K17, K18, \
@@ -73,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,                    KC_P4,   KC_P5,   KC_P6,   KC_PPLS, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,                            KC_P1,   KC_P2,   KC_P3,            \
                                                                                                                              KC_UP,                                       KC_PENT, \
-        KC_LCTL, KC_LGUI, KC_LALT,                   KC_SPC,                             KC_RALT, MO(2),                                                KC_P0,   KC_PDOT,          \
+        KC_LCTL, KC_LGUI, KC_LALT,                   KC_SPC,                             LSFT(LALT(LCTL(KC_G))), MO(2),                                                KC_P0,   KC_PDOT,          \
                                                                                                                     KC_LEFT, KC_DOWN, KC_RGHT                                      \
     ),
     [1] = LAYOUT(
@@ -88,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [2] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS,           KC_MPLY, KC_MSTP, KC_VOLU, KC_MUTE, \
-        _______, TG(1), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_MPRV, KC_MNXT, KC_VOLD, KC_SCRL, \
+        _______, TG(1), MY_SPLASH, MY_SEND_MSG, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_MPRV, KC_MNXT, KC_VOLD, KC_SCRL, \
         L_T_BR,  L_PSD,   L_BRI,   L_PSI,   L_EDG_I, _______, _______, _______, U_T_AGCR,_______, _______, _______, _______, _______,          _______, _______, _______, _______, \
         L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, L_RATIOD,L_RATIOI,_______, _______, _______, _______,                   _______, _______, _______, _______, \
         _______, L_T_MD,  L_T_ONF, _______, L_EDG_M, MD_BOOT, NK_TOGG, _______, _______, _______, _______, _______,                            _______, _______, _______,          \
@@ -117,8 +119,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void keyboard_post_init_user(void) {
     debug_enable = true;
 }
-
-//static led_flash_t flashes[MAX_TRACK_KEYS];
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
@@ -190,16 +190,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 if (led_animation_id == led_setups_count - 1) led_animation_id = 0;
                 else led_animation_id++;
             }
-            dprintf("led_setups_count = %u\n", led_setups_count);
-            dprintf("led_animation_id = %u\n", led_animation_id);
+            //dprintf("led_setups_count = %u\n", led_setups_count);
+            //dprintf("led_animation_id = %u\n", led_animation_id);
             return false;
         case L_PTP:
             if (record->event.pressed) {
                 if (led_animation_id == 0) led_animation_id = led_setups_count - 1;
                 else led_animation_id--;
             }
-            dprintf("led_setups_count = %u\n", led_setups_count);
-            dprintf("led_animation_id = %u\n", led_animation_id);
+            //dprintf("led_setups_count = %u\n", led_setups_count);
+            //dprintf("led_animation_id = %u\n", led_animation_id);
             return false;
         case L_PSI:
             if (record->event.pressed) {
@@ -382,12 +382,15 @@ led_instruction_t led_instructions[] = {
 bool rgb_matrix_indicators_user(void) {
 
     uint8_t layer = get_highest_layer(layer_state);
+    //底盘炫闪
+    if(is_splash){my_rgb_matrix_splash(EG_LED_L_UP);}
     //表示在默认层，win层
     if (layer == 0) {
+        rgb_matrix_set_color(KB_LED_LALT-1, RGB_PURPLE_DEEPER); //win键变紫
     }
     //表示在中间层，mac层
     if (layer == 1) {
-        my_rgb_matrix_splash(0);
+        rgb_matrix_set_color(KB_LED_LALT, RGB_PURPLE_DEEPER); //alt键变紫
     }
     //表示在特殊调节层
     if (layer == 2) { 

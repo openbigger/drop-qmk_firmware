@@ -92,8 +92,70 @@ led_setup_t leds_pink[] = {
     {.hs = 0, .he = 100, .rs = 255, .re = 255, .gs = 20, .ge = 20, .bs = 147, .be = 147, .ef = EF_NONE},
     {.end = 1},
 };
+led_setup_t leds_move_ring[] = {
+    {.hs = 0, .he = 100, .rs = 250, .re = 250, .gs = 17, .ge = 17, .bs = 79, .be = 79, .ef = EF_NONE},
+    {.end = 1},
+};
+led_setup_t leds_exercise_ring[] = {
+    {.hs = 0, .he = 100, .rs = 166, .re = 166, .gs = 255, .ge = 255, .bs = 0, .be = 0, .ef = EF_NONE},
+    {.end = 1},
+};
+led_setup_t leds_stand_ring[] = {
+    {.hs = 0, .he = 100, .rs = 0, .re = 0, .gs = 255, .ge = 255, .bs = 246, .be = 246, .ef = EF_NONE},
+    {.end = 1},
+};
+led_setup_t leds_stand_exercise[] = {
+    {.hs = 0,  .he = 33,  .rs = 0,   .re = 64,  .gs = 255, .ge = 255, .bs = 246, .be = 200, .ef = EF_NONE},
+    {.hs = 33, .he = 66,  .rs = 64,  .re = 130, .gs = 255, .ge = 255, .bs = 200, .be = 100, .ef = EF_NONE},
+    {.hs = 66, .he = 100, .rs = 130, .re = 166, .gs = 255, .ge = 255, .bs = 100, .be = 0,   .ef = EF_NONE},
+    {.end = 1},
+};
+led_setup_t leds_move_stand_exercise[] = {
+    // Stand (青蓝)
+    {.hs = 0, .he = 33, .rs = 0, .re = 80, .gs = 255, .ge = 255,  .bs = 246, .be = 123,  .ef = EF_NONE},
+    // Exercise (荧光绿)
+    {.hs = 33, .he = 66,  .rs = 166,   .re = 166, .gs = 255, .ge = 119, .bs = 0, .be = 0, .ef = EF_NONE},
+    // Move (红)
+    {.hs = 66,  .he = 100,  .rs = 200, .re = 250,   .gs = 17,  .ge = 17, .bs = 79,  .be = 79, .ef = EF_NONE},
+    {.end = 1},
+};
+led_setup_t leds_lightblue_with_rainbow_stripe[] = {
+    // 背景粉红色
+    {.hs = 0, .he = 100, .rs = 255, .re = 255, .gs = 128, .ge = 128, .bs = 192, .be = 192, .ef = EF_NONE},
+
+    // 深紫色条纹，从粉色中“减去”蓝红
+    {.hs = 0,  .he = 15, .rs = 100, .re = 100, .gs = 0,   .ge = 128, .bs = 150, .be = 192, .ef = EF_SCR_R | EF_SUBTRACT},
+    {.hs = 15, .he = 30, .rs = 100, .re = 100, .gs = 128, .ge = 0,   .bs = 192, .be = 150, .ef = EF_SCR_R | EF_SUBTRACT},
+
+    {.end = 1},
+};
+led_setup_t leds_pink_with_purple_stripe[] = {
+    // 背景：更浓更紫的粉底
+    {.hs = 0, .he = 100, .rs = 255, .re = 255, .gs = 20, .ge = 20, .bs = 147, .be = 147, .ef = EF_NONE},
+
+    // 条纹：抽掉红绿（不抽蓝），让紫浮现
+    {.hs = 0,  .he = 15,  .rs = 140, .re = 140, .gs = 40,  .ge = 80,  .bs = 0,   .be = 0,   .ef = EF_SCR_R | EF_SUBTRACT},
+    {.hs = 15, .he = 30,  .rs = 140, .re = 140, .gs = 80,  .ge = 40,  .bs = 0,   .be = 0,   .ef = EF_SCR_R | EF_SUBTRACT},
+
+    {.end = 1},
+};
+led_setup_t leds_duolingo_runner[] = {
+    // 背景：多邻国绿
+    {.hs = 0, .he = 100, .rs = 52, .re = 52, .gs = 240, .ge = 240, .bs = 50, .be = 50, .ef = EF_NONE},
+
+    // 条纹段1：更亮的绿 → Duo 盯你
+    {.hs = 0,  .he = 15, .rs = 200, .re = 102, .gs = 240, .ge = 230, .bs = 150, .be = 100, .ef = EF_SCR_R | EF_SUBTRACT},
+    {.hs = 15, .he = 30, .rs = 102, .re = 200, .gs = 230, .ge = 240, .bs = 100, .be = 150, .ef = EF_SCR_R | EF_SUBTRACT},
+
+    {.end = 1},
+};
+led_setup_t leds_black_with_duolingo[] = {
+    {.hs = 0, .he = 15, .rs = 0, .re = 52, .gs = 0, .ge = 250, .bs = 0, .be = 50, .ef = EF_SCR_R},
+    {.hs = 15, .he = 30, .rs = 52, .re = 0, .gs = 250, .ge = 0, .bs = 50, .be = 0, .ef = EF_SCR_R},
+    {.end = 1},
+};
 // Add the new animation name to the list below following its format
 
-void *led_setups[] = {leds_pink, leds_rainbow_s, leds_rainbow_ns, leds_teal_salmon, leds_yellow, leds_red, leds_green, leds_blue, leds_white, leds_white_with_red_stripe, leds_black_with_red_stripe, leds_off};
+void *led_setups[] = {leds_exercise_ring, leds_move_ring, leds_stand_ring, leds_move_stand_exercise, leds_pink_with_purple_stripe, leds_duolingo_runner, leds_black_with_duolingo, leds_rainbow_s, leds_rainbow_ns, leds_green, leds_blue, leds_off};
 
 const uint8_t led_setups_count = sizeof(led_setups) / sizeof(led_setups[0]);
