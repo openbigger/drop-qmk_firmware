@@ -1,6 +1,9 @@
 #include "openbigger.h"
 #include "color.h"
 #include "openbigger_keycodes.h"
+#include "math.h"
+
+#define PI 3.14159265f
 
 led_flash_t flashes[MAX_TRACK_KEYS];
 bool is_capslock = false;
@@ -44,14 +47,14 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
     }
     
     switch (keycode) {
-        
+
         case MY_SPLASH:
             if (record->event.pressed) {
                 is_splash = !is_splash;
                 dprintf("splash:%d\n",is_splash);
             }
             return false;
-            
+
         case MY_SEND_MSG:
             if (record->event.pressed) {
                 send_string(STR_HELLO_MM);
@@ -60,6 +63,7 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
                 dprintf("altsplash:%d\n",is_splash);
             }
             return false;
+
         /*// 检查os，看看alt和gui到底怎么实现的
         case MY_LALT:
             if (record->event.pressed) {
@@ -79,8 +83,8 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
             }
             return false;
             */
-    }
-    
+    }   //end switch
+
     return true;
 }
 
@@ -129,6 +133,89 @@ void my_rgb_matrix_splash(uint8_t start_led) {
     }
     offset++; // 每次刷新偏移一下，造成流动效果
 }
+//单键灯效，一次刷新只能刷一个灯，多灯要开矩阵记忆很麻烦
+void my_rgb_matrix_LED_single(uint8_t led_index, uint8_t mode) {
+    // 静态变量：仅控制一个灯
+    static uint16_t phase = 90;       // 初始化从最亮处开始（sin(90°) = 1）
+    static uint8_t frame_count = 0;
+    static uint8_t hold_counter = 0;  // 用于驻留时间控制
+    static uint8_t last_mode = 255;
+    static RGB lasst_color = {0x66, 0xCC, 0x66};// duolingo soft green
+
+    // 切换模式时清除驻留和重置相位
+    if (mode != last_mode) {
+        last_mode = mode;
+        hold_counter = 0;
+        phase = 90;  // 保证开始时有可见亮度
+        frame_count = 0;
+    }
+    // 如果更新时间没到，直接返回
+    dprintf("LED INDEX = %u, count = %u\n", led_index, frame_count);
+    frame_count++;
+    if (frame_count < 12) {
+        rgb_matrix_set_color(led_index, lasst_color.r, lasst_color.g, lasst_color.b);
+        return;
+    }
+    frame_count = 0;
+    // 驻留在亮点时不推进 phase
+    if (hold_counter > 0) {
+        hold_counter--;
+    } else {
+        phase += 2;
+        if (phase >= 360) phase -= 360;
+
+        // 亮点范围驻留 1 秒左右（15帧）
+        if (phase >= 85 && phase <= 95) {
+            hold_counter = 15;
+        }
+    }
+
+    // 计算亮度（正弦波）
+    float rad = phase * PI / 180.0f;
+    float sin_value = sinf(rad);  // [-1, 1]
+    uint8_t sparkle_brightness = (uint8_t)(100 + (sin_value + 1.0f) * 77.5f);  // [100,255]
+
+    // 不同模式的色彩定义
+    HSV hsv;
+    switch (mode) {
+        case 0: // 星空白
+            hsv = (HSV){ 0, 0, sparkle_brightness };
+            break;
+        case 1: // 青蓝思考
+            hsv = (HSV){
+                140 + ((sparkle_brightness - 100) * 60 / 155),
+                200,
+                sparkle_brightness
+            };
+            break;
+        case 2: // 灵感黄光
+            hsv = (HSV){
+                10 + ((sparkle_brightness - 100) * 40 / 155),//25～25+40
+                230,
+                sparkle_brightness
+            };
+            break;
+        case 3: // 龙魂觉醒
+            hsv = (HSV){
+                0 + ((sparkle_brightness - 100) * 30 / 155),
+                250,
+                sparkle_brightness
+            };
+            break;
+        case 4: // 深紫色
+            hsv = (HSV){ 191, 255, 255 };//RGB(128, 0, 255)
+             break;
+        default:
+            hsv = (HSV){ 0, 0, 0 };
+            break;
+    }
+
+    RGB rgb = hsv_to_rgb(hsv);
+    lasst_color = rgb;
+    rgb_matrix_set_color(led_index, rgb.r, rgb.g, rgb.b);
+    //rgb_matrix_set_color(led_index, 255, 0, 0);  // 强制亮红
+    dprintf("LED INDEX = %u, RGB = %d,%d,%d\n", led_index, rgb.r, rgb.g, rgb.b);
+}
 
 void refresh_indicators_layer(uint8_t layer_num) {
     rgb_matrix_set_color(IND_LED_DOWN, RGB_OFF); 
@@ -159,10 +246,14 @@ void rgb_light_keys(void) {
             rgb_matrix_set_color(i, RGB_EXERCISE_RING);
         }
         else if(i == KB_LED_TAB +8
-                ||i == KB_LED_Z +4||i == KB_LED_Z +5
+                ||i == KB_LED_Z +5
                 ||i == KB_LED_SPC || i == KB_LED_SPC+1 )
         {
             rgb_matrix_set_color(i, RGB_STAND_RING);
+        }
+        else if(i == KB_LED_Z +4 || i==KB_LED_FN)//B,Fn
+        {
+            rgb_matrix_set_color(i, RGB_ORANGE_RICH);
         }
         else {
             //rgb_matrix_set_color(i, 0, 0, 0); // 

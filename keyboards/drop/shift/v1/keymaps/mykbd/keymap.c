@@ -384,13 +384,17 @@ bool rgb_matrix_indicators_user(void) {
     uint8_t layer = get_highest_layer(layer_state);
     //底盘炫闪
     if(is_splash){my_rgb_matrix_splash(EG_LED_L_UP);}
+    rgb_matrix_set_color(KB_LED_FN, RGB_ORANGE_RICH); //Fn橙色
     //表示在默认层，win层
     if (layer == 0) {
-        rgb_matrix_set_color(KB_LED_LALT-1, RGB_PURPLE_DEEPER); //win键变紫
+        rgb_matrix_set_color(KB_LED_WIN, RGB_PURPLE_DEEPER); //alt键变紫
+        my_rgb_matrix_LED_single(KB_LED_RALT, MY_LED_MODE_BLUE);//设置ai键
     }
     //表示在中间层，mac层
     if (layer == 1) {
         rgb_matrix_set_color(KB_LED_LALT, RGB_PURPLE_DEEPER); //alt键变紫
+        //my_rgb_matrix_LED_single(KB_LED_LALT, MY_LED_MODE_STATIC_PURPLE);//can not use more than 1 
+        my_rgb_matrix_LED_single(KB_LED_RALT, MY_LED_MODE_DRAGON);//设置ai键
     }
     //表示在特殊调节层
     if (layer == 2) { 

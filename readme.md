@@ -38,20 +38,20 @@
 ## 🗂️ 项目结构
 ```
 keyboards/drop/shift/v1/keymaps/mykbd/
-├── keymap.c                # 主键映射逻辑
-├── rules.mk                # 启用自定义用户模块
-├── config.h                # 上一层目录，最大亮度设置、功能启用
+├── keymap.c                      # 主键映射逻辑
+├── rules.mk                      # 启用自定义用户模块
+├── config.h                      # 上一层目录，最大亮度设置、功能启用
 └── md_rgb_matrix_programs.c.bak  # 备份旧灯效设置（已删除）
 
 users/openbigger/
 └── lib/led_framework/
-    ├── config.h         # from drop_led
-    ├── openbigger_keycodes.c            # 自定义键值，把原keymaps的也搬过来
-    ├── openbigger.c         # 自己的函数在自己这里跑
+    ├── config.h                # from drop_led
+    ├── openbigger_keycodes.c   # 自定义键值，把原keymaps的也搬过来
+    ├── openbigger.c            # 自己的函数在自己这里跑
     ├── openbigger.h            # 拿给外面的用
-    ├── post_config.h      # from drop_led
+    ├── post_config.h           # from drop_led
     ├── rgb_matrix_user.inc     # from drop_led
-    └── rules.mk   # 编译路径
+    └── rules.mk                # 编译路径
 ```
 ## 🌐 自定义功能说明
 
@@ -77,7 +77,8 @@ users/openbigger/
 ```bash
 # 编译固件
 qmk compile -kb drop/shift/v1 -km mykbd
-
+# 因为是老分支用make更好
+make drop/shift/v1:mykbd 
 # Fn+b长按进入烧录模式 用drop的工具烧录到 Drop SHIFT
 
 # 启动串口调试（查看按键、灯效日志）

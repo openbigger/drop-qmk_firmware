@@ -154,8 +154,28 @@ led_setup_t leds_black_with_duolingo[] = {
     {.hs = 15, .he = 30, .rs = 52, .re = 0, .gs = 250, .ge = 0, .bs = 50, .be = 0, .ef = EF_SCR_R},
     {.end = 1},
 };
+led_setup_t leds_osomatsu[] = {
+    {.hs = 0, .he = 15, .rs = 200, .re = 200, .gs = 0, .ge = 0, .bs = 0, .be = 0, .ef = EF_OVER}, // 红：おそ松
+    {.hs = 15, .he = 33, .rs = 0, .re = 0, .gs = 102, .ge = 102, .bs = 255, .be = 255, .ef = EF_OVER}, // 蓝：カラ松
+    {.hs = 33, .he = 50, .rs = 0, .re = 0, .gs = 255, .ge = 255, .bs = 102, .be = 102, .ef = EF_OVER}, // 绿：チョロ松
+    {.hs = 50, .he = 66.67, .rs = 128, .re = 128, .gs = 0, .ge = 0, .bs = 128, .be = 128, .ef = EF_OVER}, // 紫：一松
+    {.hs = 66.67, .he = 84, .rs = 255, .re = 255, .gs = 255, .ge = 255, .bs = 0, .be = 0, .ef = EF_OVER}, // 黄：十四松
+    {.hs = 85, .he = 100, .rs = 255, .re = 255, .gs = 20, .ge = 20, .bs = 147, .be = 147, .ef = EF_OVER}, // 粉：トド松
+    {.end = 1},
+};
+// Osomatsu scrolling (阿松六子滚动灯效)
+led_setup_t leds_osomatsu_s[] = {
+    {.hs = 0, .he = 16.67, .rs = 200, .re = 200, .gs = 0,   .ge = 0,   .bs = 0,   .be = 0,   .ef = EF_OVER | EF_SCR_R}, // おそ松 - 红
+    {.hs = 16.67, .he = 33.33, .rs = 0,   .re = 0,   .gs = 102, .ge = 102, .bs = 255, .be = 255, .ef = EF_OVER | EF_SCR_R}, // カラ松 - 蓝
+    {.hs = 33.33, .he = 50, .rs = 0,   .re = 0,   .gs = 255, .ge = 255, .bs = 102, .be = 102, .ef = EF_OVER | EF_SCR_R}, // チョロ松 - 绿
+    {.hs = 50, .he = 66.67, .rs = 128, .re = 128, .gs = 0,   .ge = 0,   .bs = 128, .be = 128, .ef = EF_OVER | EF_SCR_R}, // 一松 - 紫
+    {.hs = 66.67, .he = 83.33, .rs = 255, .re = 255, .gs = 255, .ge = 255, .bs = 0,   .be = 0,   .ef = EF_OVER | EF_SCR_R}, // 十四松 - 黄
+    {.hs = 83.33, .he = 100, .rs = 255, .re = 255, .gs = 20, .ge = 20, .bs = 147, .be = 147, .ef = EF_OVER | EF_SCR_R}, // トド松 - 粉
+    {.end = 1},
+};
 // Add the new animation name to the list below following its format
 
-void *led_setups[] = {leds_exercise_ring, leds_move_ring, leds_stand_ring, leds_move_stand_exercise, leds_pink_with_purple_stripe, leds_duolingo_runner, leds_black_with_duolingo, leds_rainbow_s, leds_rainbow_ns, leds_green, leds_blue, leds_off};
+void *led_setups[] = {leds_exercise_ring, leds_move_ring, leds_stand_ring, leds_move_stand_exercise, leds_pink_with_purple_stripe, 
+    leds_duolingo_runner, leds_black_with_duolingo, leds_osomatsu_s, leds_osomatsu, leds_green, leds_blue};
 
 const uint8_t led_setups_count = sizeof(led_setups) / sizeof(led_setups[0]);

@@ -28,8 +28,11 @@ enum shift_v1_led_numbers  {
     KB_LED_RSFT = 82,
     KB_LED_UP = 83,
     //88~98
+    KB_LED_WIN = 89,
     KB_LED_LALT = 90,//checked.
     KB_LED_SPC = 91,
+    KB_LED_RALT = 92,
+    KB_LED_FN = 93,
     KB_LED_PDOT = 98,//checked keyboard end
     //99~118
     EG_LED_L_UP = 99,
@@ -66,6 +69,14 @@ void refresh_pressed_key_LED(led_flash_t *f);
 void rgb_light_keys(void);//调节层的灯光布局
 
 void my_rgb_matrix_splash(uint8_t start_led);
+void my_rgb_matrix_LED_single(uint8_t led_index, uint8_t mode);
+// 为 mode 命名
+#define MY_LED_MODE_WHITE      0
+#define MY_LED_MODE_BLUE       1
+#define MY_LED_MODE_YELLOW     2
+#define MY_LED_MODE_DRAGON     3
+#define MY_LED_MODE_STATIC_PURPLE 4
+#define BREATH_INTERVAL 30  // 每次亮度更新的间隔（毫秒）
 
 //weak
 bool process_record_openbigger(uint16_t keycode, keyrecord_t *record);
@@ -107,3 +118,19 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record);
 
 #define STR_HELLO_MM "Hello 毛毛! 欢迎使用 OpenBigger 键盘."
 #define STR_GO_TO_DIE "go to hell~ しねえ、死ね、死ね！"
+/*
+ * HSV 色相对照表（H 为 Hue，单位：度）
+ * S = 255（饱和度最大），V = 255（明度最大）时对应的颜色及其心理感受：
+ *
+ * H     S   V     显示颜色   | 感觉说明
+ * 0     255 255   红色       | 鲜明、热烈
+ * 30    255 255   橙色       | 活力、温暖
+ * 60    255 255   黄色       | 轻快、提示
+ * 120   255 255   绿色       | 安全、健康
+ * 180   255 255   青色       | 科技感、冷静
+ * 240   255 255   蓝色       | 稳重、理性
+ * 300   255 255   紫色       | 神秘、优雅
+ * 330   255 255   桃红色     | 活泼、梦幻
+ *
+ * 可参考此表选择合适的色调用于灯效设计，既美观又符合功能意图。
+ */
