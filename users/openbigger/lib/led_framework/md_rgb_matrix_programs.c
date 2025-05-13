@@ -155,17 +155,17 @@ led_setup_t leds_black_with_duolingo[] = {
     {.end = 1},
 };
 led_setup_t leds_osomatsu[] = {
-    {.hs = 0, .he = 15, .rs = 200, .re = 200, .gs = 0, .ge = 0, .bs = 0, .be = 0, .ef = EF_OVER}, // 红：おそ松
-    {.hs = 15, .he = 33, .rs = 0, .re = 0, .gs = 102, .ge = 102, .bs = 255, .be = 255, .ef = EF_OVER}, // 蓝：カラ松
-    {.hs = 33, .he = 50, .rs = 0, .re = 0, .gs = 255, .ge = 255, .bs = 102, .be = 102, .ef = EF_OVER}, // 绿：チョロ松
-    {.hs = 50, .he = 66.67, .rs = 128, .re = 128, .gs = 0, .ge = 0, .bs = 128, .be = 128, .ef = EF_OVER}, // 紫：一松
-    {.hs = 66.67, .he = 84, .rs = 255, .re = 255, .gs = 255, .ge = 255, .bs = 0, .be = 0, .ef = EF_OVER}, // 黄：十四松
-    {.hs = 85, .he = 100, .rs = 255, .re = 255, .gs = 20, .ge = 20, .bs = 147, .be = 147, .ef = EF_OVER}, // 粉：トド松
+    {.hs = 0, .he = 15.8, .rs = 200, .re = 200, .gs = 10, .ge = 10, .bs = 10, .be = 10, .ef = EF_OVER}, // 红：おそ松
+    {.hs = 15.8, .he = 31.1, .rs = 0, .re = 0, .gs = 82, .ge = 82, .bs = 255, .be = 255, .ef = EF_OVER}, // 蓝：カラ松
+    {.hs = 31.1, .he = 45.6, .rs = 0, .re = 0, .gs = 255, .ge = 255, .bs = 72, .be = 72, .ef = EF_OVER}, // 绿：チョロ松
+    {.hs = 45.6, .he = 67.2, .rs = 128, .re = 128, .gs = 0, .ge = 0, .bs = 128, .be = 128, .ef = EF_OVER}, // 紫：一松
+    {.hs = 67.2, .he = 83.1, .rs = 255, .re = 255, .gs = 165, .ge = 165, .bs = 0, .be = 0, .ef = EF_OVER}, // 黄：十四松
+    {.hs = 83.1, .he = 100, .rs = 255, .re = 255, .gs = 20, .ge = 20, .bs = 147, .be = 147, .ef = EF_OVER}, // 粉：トド松
     {.end = 1},
 };
 // Osomatsu scrolling (阿松六子滚动灯效)
 led_setup_t leds_osomatsu_s[] = {
-    {.hs = 0, .he = 16.67, .rs = 200, .re = 200, .gs = 0,   .ge = 0,   .bs = 0,   .be = 0,   .ef = EF_OVER | EF_SCR_R}, // おそ松 - 红
+    {.hs = 0, .he = 16.67, .rs = 200, .re = 200, .gs = 10,   .ge = 10,   .bs = 10,   .be = 10,   .ef = EF_OVER | EF_SCR_R}, // おそ松 - 红
     {.hs = 16.67, .he = 33.33, .rs = 0,   .re = 0,   .gs = 102, .ge = 102, .bs = 255, .be = 255, .ef = EF_OVER | EF_SCR_R}, // カラ松 - 蓝
     {.hs = 33.33, .he = 50, .rs = 0,   .re = 0,   .gs = 255, .ge = 255, .bs = 102, .be = 102, .ef = EF_OVER | EF_SCR_R}, // チョロ松 - 绿
     {.hs = 50, .he = 66.67, .rs = 128, .re = 128, .gs = 0,   .ge = 0,   .bs = 128, .be = 128, .ef = EF_OVER | EF_SCR_R}, // 一松 - 紫
