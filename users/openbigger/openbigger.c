@@ -17,6 +17,7 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
 }
 */
 bool is_splash = false;
+bool is_flash = false;
 __attribute__ ((weak))
 bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
 {
@@ -57,13 +58,31 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
 
         case MY_SEND_MSG:
             if (record->event.pressed) {
-                send_string(STR_HELLO_MM);
+                //send_string(STR_HELLO_MM);
+                //wait_ms(200);
+                //send_string(STR_GO_TO_DIE);
+                //wait_ms(200);
+                send_string(STR_PINYIN);
                 wait_ms(200);
-                send_string(STR_GO_TO_DIE);
-                dprintf("altsplash:%d\n",is_splash);
+                send_string(STR_PINYIN);
+                wait_ms(200);
+                send_string(STR_PINYIN);
+                wait_ms(200);
+                send_string(STR_PINYIN);
+                wait_ms(200);
+                send_string(STR_PINYIN);
+                wait_ms(200);
+                send_string(STR_PINYIN);
+                wait_ms(200);
+                send_string("hahahahahahahahhahahaha1");
             }
             return false;
-
+        case MY_FLASH:
+            if (record->event.pressed) {
+                is_flash =!is_flash;
+                //dprintf("flash:%d\n",is_flash);
+            }
+            return false;
         /*// 检查os，看看alt和gui到底怎么实现的
         case MY_LALT:
             if (record->event.pressed) {
@@ -96,13 +115,13 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
 void refresh_indicators_kb(void) {
     //更新状态灯,它们本身亮
     if((host_keyboard_led_state().caps_lock)||is_capslock) {
-        rgb_matrix_set_color(KB_LED_CAPS, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(KB_LED_CAPS, RGB_ORANGE_RICH);
     }
     if(host_keyboard_led_state().num_lock) {
-        rgb_matrix_set_color(KB_LED_NUM, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(KB_LED_NUM, RGB_ORANGE_RICH);
     }
     if(host_keyboard_led_state().scroll_lock) {
-        rgb_matrix_set_color(IND_LED_DOWN, RGB_SPRINGGREEN);
+        rgb_matrix_set_color(IND_LED_DOWN, RGB_ORANGE_RICH);
     }
 } 
 
@@ -119,19 +138,81 @@ void refresh_pressed_key_LED(led_flash_t *f) {
         }
     }
 }
+// 赛博灯效，用is_flash判断
 
+static mole_states_t mole_states[RGB_MATRIX_LED_COUNT] = {0};
+void my_rgb_matrix_cyber_flash(mole_area_t area, uint8_t r, uint8_t g, uint8_t b) {
+    uint16_t now = timer_read();
 
+    bool do_logic = false;
+    static uint16_t last_update = 0;
+    if (timer_elapsed(last_update) > UPDATE_INTERVAL) {
+        last_update = now;
+        do_logic = true;
+    }
+
+    for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+        bool is_key = g_led_config.flags[i] & LED_FLAG_KEYLIGHT;
+        if ((area == MOLE_AREA_KEYS && !is_key) ||
+            (area == MOLE_AREA_CHASSIS && is_key)) {
+            continue;  // 区域筛选，统一控制就不能在后面改底盘灯，只能加一个判断Í
+        }
+
+        // 状态更新
+        if (do_logic) {
+            if (mole_states[i].active) {
+                if (timer_elapsed(mole_states[i].start_time) > mole_states[i].duration) {
+                    mole_states[i].active = false;
+                }
+            } else {
+                if ((rand() % 100) < MOUSE_PROBABILITY) {
+                    mole_states[i].active = true;
+                    mole_states[i].start_time = now;
+                    mole_states[i].duration = MIN_DURATION + (rand() % (MAX_DURATION - MIN_DURATION + 1));
+                }
+            }
+        }
+
+        // 绘制灯光
+        if (mole_states[i].active) {
+            rgb_matrix_set_color(i, r, g, b);
+        } else {
+            rgb_matrix_set_color(i, 0, 0, 0);
+        }
+    }
+}
+
+//全键盘水波
 void my_rgb_matrix_splash(uint8_t start_led) {
-    
     static uint8_t offset = 0; // 流动偏移
     for (uint8_t i = start_led; i < RGB_MATRIX_LED_COUNT; i++) {
         if ((i + offset) % 10 < 5) {
-            rgb_matrix_set_color(i, RGB_ORANGE_RICH); //ß.GPT说不能直接乘，反正能跑
+            rgb_matrix_set_color(i, RGB_ORANGE_RICH); //GPT说rgb不能直接乘，反正能跑
         } else {
             rgb_matrix_set_color(i, 0, 0, 0); // 黑掉
         }
     }
     offset++; // 每次刷新偏移一下，造成流动效果
+}
+//键盘改纯色，底盘灯起始EG_LED_L_UP = 99
+void my_rgb_matrix_pure_color(uint8_t start_led, uint8_t r, uint8_t g, uint8_t b) {
+    for (uint8_t i = start_led; i < RGB_MATRIX_LED_COUNT; i++) {
+        rgb_matrix_set_color(i, r, g, b);
+    }
+}
+//彩虹底盘灯
+static uint16_t hue_base = 0;
+void my_rgb_matrix_animate_chassis_rainbow(void) {
+    hue_base += 1;  // 控制速度，可改成 +=2, +=3 更快
+    if (hue_base > 360) hue_base = 0;
+
+    for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+        if (!(g_led_config.flags[i] & LED_FLAG_KEYLIGHT)) {
+            HSV hsv = { .h = hue_base % 360, .s = 255, .v = 50 };  // 彩色 + 柔和亮度
+            RGB rgb = hsv_to_rgb(hsv);
+            rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+        }
+    }
 }
 //单键灯效，一次刷新只能刷一个灯，多灯要开矩阵记忆很麻烦
 void my_rgb_matrix_LED_single(uint8_t led_index, uint8_t mode) {
@@ -241,7 +322,7 @@ void rgb_light_keys(void) {
         {
             rgb_matrix_set_color(i, RGB_PURPLE_DEEPER); 
         } 
-        else if(i == KB_LED_1||i == KB_LED_1+1||i == KB_LED_1+2)
+        else if(i == KB_LED_1||i == KB_LED_1+1||i == KB_LED_1+2||i == KB_LED_1+3)//自己加的键
         {
             rgb_matrix_set_color(i, RGB_EXERCISE_RING);
         }

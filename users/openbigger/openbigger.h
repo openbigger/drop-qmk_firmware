@@ -60,16 +60,40 @@ typedef struct {
 } led_flash_t;
 extern led_flash_t flashes[MAX_TRACK_KEYS];
 //extern os_variant_t current_os;//OS_UNSURE;
+//赛博灯效
+//#define TOTAL_KEYS RGB_MATRIX_LED_COUNT
+#define UPDATE_INTERVAL 50            // 控制整体刷新频率
+#define MOUSE_PROBABILITY 4           // 每次尝试“出洞”的概率百分比
+#define MIN_DURATION 500              // 老鼠最短停留时间 ms
+#define MAX_DURATION 1000              // 老鼠最长停留时间 ms
 
-extern bool is_splash;
+typedef enum {
+    MOLE_AREA_KEYS,
+    MOLE_AREA_CHASSIS,
+} mole_area_t;
+
+typedef struct {
+    bool active;              // 当前是否有老鼠
+    uint16_t start_time;      // 老鼠出现时间
+    uint16_t duration;        // 这只老鼠停留多久
+} mole_states_t;
+
+void my_rgb_matrix_cyber_flash(mole_area_t area, uint8_t r, uint8_t g, uint8_t b);
+extern bool is_flash;
 
 void refresh_indicators_kb(void);//键盘指示灯，大写锁定等按下后点亮自己
 void refresh_indicators_layer(uint8_t layer_num);//三个小灯改为layer指示灯，在哪一层亮哪个灯
-void refresh_pressed_key_LED(led_flash_t *f);
+void refresh_pressed_key_LED(led_flash_t *f);//键盘按下后，点亮自己
 void rgb_light_keys(void);//调节层的灯光布局
-
+//全键盘水波
+extern bool is_splash;
 void my_rgb_matrix_splash(uint8_t start_led);
+// 单灯控制，呼吸
 void my_rgb_matrix_LED_single(uint8_t led_index, uint8_t mode);
+//简单改色
+void my_rgb_matrix_pure_color(uint8_t start_led, uint8_t r, uint8_t g, uint8_t b);
+//彩虹底盘灯
+void my_rgb_matrix_animate_chassis_rainbow(void);
 // 为 mode 命名
 #define MY_LED_MODE_WHITE      0
 #define MY_LED_MODE_BLUE       1
@@ -118,6 +142,7 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record);
 
 #define STR_HELLO_MM "Hello 毛毛! 欢迎使用 OpenBigger 键盘."
 #define STR_GO_TO_DIE "go to hell~ しねえ、死ね、死ね！"
+#define STR_PINYIN "nimen1douqu1siba4"
 /*
  * HSV 色相对照表（H 为 Hue，单位：度）
  * S = 255（饱和度最大），V = 255（明度最大）时对应的颜色及其心理感受：
