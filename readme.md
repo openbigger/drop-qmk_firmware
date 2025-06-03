@@ -11,13 +11,14 @@
 [![Platform](https://img.shields.io/badge/platform-Mac%20%7C%20Win-lightgrey)]()
 
 
-> 🛠 本分支基于 [`drop_led`](https://github.com/Massdrop/qmk_firmware/tree/feature/riot_xap/users/drop_led) 用户模块进行深度定制，适配win和macOS平台、增强灯效控制、优化默认布局。
-
+> 🛠 本分支基于 Drop官方提供的库中[`drop_led`](https://github.com/Massdrop/qmk_firmware/tree/feature/riot_xap/users/drop_led) 用户模块进行深度定制，适配win和macOS平台、增强灯效控制、优化默认布局。
+> 
+> 💡 Drop官方[`How to Configure your Drop Keyboard!`](https://drop.com/talk/9382/how-to-configure-your-drop-keyboard) 详细介绍了键盘的自定义过程并附离线编辑烧录程序下载链接。其中[`在线自定义`](https://drop.com/mechanical-keyboards/configurator) 可在登陆后记住自己保存的键盘布局。由于界面自定义只能增加静态颜色，无法改变已有模式，且层的先后次序无法拖动，故clone官方库写自己的bin文件。
 ---
 
 ## 📦 分支说明
 
-- 🔄 分支名：`feature/riot_xap`
+- 🔄 分支名：`feature/riot_xap`[`库链接`](https://github.com/Massdrop/qmk_firmware/tree/feature/riot_xap)
 - 🔧 用户模块：从 `users/drop_led` 复制为 `users/openbigger`
 - 🧠 `md_rgb_matrix_programs.c`中加入自定义灯效数组 `led_setups` 
 - 💻 三层布局，从下到上：0 Win 模式、1 Mac 模式、2 调节层，用`Fn+1`切换，三个小灯可以显示在哪一层
