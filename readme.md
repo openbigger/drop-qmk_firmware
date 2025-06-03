@@ -7,7 +7,7 @@
 [![Last Commit](https://img.shields.io/github/last-commit/openbigger/drop-qmk_firmware?style=flat-square)](https://github.com/openbigger/drop-qmk_firmware/commits)
 [![License](https://img.shields.io/badge/license-Open%20Source-blue?style=flat-square)]()
 [![Powered by ChatGPT](https://img.shields.io/badge/🤖_-Code_with_GPT-10a37f?style=flat-square&logo=openai&logoColor=white)](https://openai.com/chatgpt)
-[![Version](https://img.shields.io/badge/version-v1.1-blue)](https://github.com/openbigger/drop-qmk_firmware)
+[![Version](https://img.shields.io/badge/version-v1.2-blue)](https://github.com/openbigger/drop-qmk_firmware)
 [![Platform](https://img.shields.io/badge/platform-Mac%20%7C%20Win-lightgrey)]()
 
 
