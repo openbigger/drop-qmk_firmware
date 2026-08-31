@@ -1,6 +1,7 @@
 #include "openbigger.h"
 #include "color.h"
 #include "openbigger_keycodes.h"
+#include "raw_hid.h"
 #include "math.h"
 
 #define PI 3.14159265f
@@ -18,6 +19,22 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
 */
 bool is_splash = false;
 bool is_flash = false;
+
+// Raw HID command: EA 12 21 <state>
+// state: 00 disables; any non-zero value enables the existing Fn+2 splash.
+// 开灯：EA 12 21 01
+// 关灯：EA 12 21 00
+void raw_hid_receive(uint8_t *data, uint8_t length) {
+    if (length >= 4 &&
+        data[0] == 0xEA &&
+        data[1] == 0x12 &&
+        data[2] == 0x21) {
+        is_splash = data[3] != 0;
+        data[3] = is_splash;
+        raw_hid_send(data, length);
+    }
+}
+
 __attribute__ ((weak))
 bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
 {

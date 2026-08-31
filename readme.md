@@ -13,8 +13,12 @@
 
 > 🛠 本分支基于 Drop官方提供的库中[`drop_led`](https://github.com/Massdrop/qmk_firmware/tree/feature/riot_xap/users/drop_led) 用户模块进行深度定制，适配win和macOS平台、增强灯效控制、优化默认布局。
 > 
-> 💡 Drop官方[`How to Configure your Drop Keyboard!`](https://drop.com/talk/9382/how-to-configure-your-drop-keyboard) 详细介绍了键盘的自定义过程并附离线编辑烧录程序下载链接。其中[`在线自定义`](https://drop.com/mechanical-keyboards/configurator) 可在登陆后记住自己保存的键盘布局。由于界面自定义只能增加静态颜色，无法改变已有模式，且层的先后次序无法拖动，故clone官方库写自己的bin文件。
+> 💡 Drop官方[`How to Configure your Drop Keyboard!`](https://helpdesk.drop.com/hc/en-us/articles/44444057868305-How-to-Configure-your-Drop-Keyboard) 详细介绍了键盘的自定义过程并附离线编辑烧录程序下载链接。其中[`在线自定义`链接已失效](https://drop.com/mechanical-keyboards/configurator) 可在登陆后记住自己保存的键盘布局。由于界面自定义只能增加静态颜色，无法改变已有模式，且层的先后次序无法拖动，故clone官方库写自己的bin文件。
 ---
+
+## bin文件说明
+`users/openbigger/drop_shift_v1_mykbd.bin`为v1.2版本
+`users/openbigger/drop_shift_v1_mykbd_1221.bin`为v1.3版本，加入Raw HID command
 
 ## 📦 分支说明
 
@@ -63,6 +67,7 @@ users/openbigger/
 | 粉色灯效         | 自定义若干灯效色彩替换原有 |
 | CapsLock 自亮     | 按下 CapsLock 时，仅点亮自身按键灯，增强视觉提示 |
 | 炫酷灯效 | Layer3调节层，激活后按2点亮底盘灯 |
+| Raw HID command | 开灯：EA 12 21 01；关灯：EA 12 21 00 |
 | 自定义按键     | Fn+4，输出字符串，右边Alt，叫出GPT（需要系统配合设置快捷键shift+ctrl+alt+g） |
 
 ## ⌨️ 层级说明
