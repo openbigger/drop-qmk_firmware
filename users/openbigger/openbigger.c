@@ -19,17 +19,26 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
 */
 bool is_splash = false;
 bool is_flash = false;
+uint8_t splash_r = 0xFF;
+uint8_t splash_g = 0x50;
+uint8_t splash_b = 0x00;
 
-// Raw HID command: EA 12 21 <state>
+// Raw HID command prefix (7 bytes): EA 12 21 <state> <red> <green> <blue>
 // state: 00 disables; any non-zero value enables the existing Fn+2 splash.
-// 开灯：EA 12 21 01
-// 关灯：EA 12 21 00
+// The RGB fields are used only while enabled.
+// Raw HID itself is a fixed 32-byte report, so the callback carries this
+// 7-byte command followed by unused report padding.
 void raw_hid_receive(uint8_t *data, uint8_t length) {
-    if (length >= 4 &&
+    if (length >= 7 &&
         data[0] == 0xEA &&
         data[1] == 0x12 &&
         data[2] == 0x21) {
         is_splash = data[3] != 0;
+        if (is_splash) {
+            splash_r = data[4];
+            splash_g = data[5];
+            splash_b = data[6];
+        }
         data[3] = is_splash;
         raw_hid_send(data, length);
     }
@@ -204,7 +213,7 @@ void my_rgb_matrix_splash(uint8_t start_led) {
     static uint8_t offset = 0; // 流动偏移
     for (uint8_t i = start_led; i < RGB_MATRIX_LED_COUNT; i++) {
         if ((i + offset) % 10 < 5) {
-            rgb_matrix_set_color(i, RGB_ORANGE_RICH); //GPT说rgb不能直接乘，反正能跑
+            rgb_matrix_set_color(i, splash_r, splash_g, splash_b);
         } else {
             rgb_matrix_set_color(i, 0, 0, 0); // 黑掉
         }

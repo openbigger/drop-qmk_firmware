@@ -19,6 +19,7 @@
 ## bin文件说明
 `users/openbigger/drop_shift_v1_mykbd.bin`为v1.2版本
 `users/openbigger/drop_shift_v1_mykbd_1221.bin`为v1.3版本，加入Raw HID command
+`users/openbigger/drop_shift_v1_mykbd_0908.bin`为v1.4版本，Raw HID 可传入底盘闪灯 RGB 颜色。
 
 ## 📦 分支说明
 
@@ -82,7 +83,7 @@ users/openbigger/
 ## 📥 使用说明
 
 ```bash
-# 编译固件
+# 编译固件（这里跑不通就去看AGENTS.md的5.编译）
 qmk compile -kb drop/shift/v1 -km mykbd
 # 因为是老分支用make更好
 make drop/shift/v1:mykbd 

@@ -87,6 +87,9 @@ void refresh_pressed_key_LED(led_flash_t *f);//键盘按下后，点亮自己
 void rgb_light_keys(void);//调节层的灯光布局
 //全键盘水波
 extern bool is_splash;
+extern uint8_t splash_r;
+extern uint8_t splash_g;
+extern uint8_t splash_b;
 void my_rgb_matrix_splash(uint8_t start_led);
 // 单灯控制，呼吸
 void my_rgb_matrix_LED_single(uint8_t led_index, uint8_t mode);
