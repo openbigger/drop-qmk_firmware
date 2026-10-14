@@ -90,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [2] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_INS,           KC_MPLY, KC_MSTP, KC_VOLU, KC_MUTE, \
-        _______, TG(1), MY_SPLASH, MY_FLASH, MY_SEND_MSG, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_MPRV, KC_MNXT, KC_VOLD, KC_SCRL, \
+        _______, TG(1), MY_SPLASH, MY_FLASH, MY_SEND_MSG, MY_VERSION_INFO, _______, _______, _______, _______, _______, _______, _______, _______,          KC_MPRV, KC_MNXT, KC_VOLD, KC_SCRL, \
         L_T_BR,  L_PSD,   L_BRI,   L_PSI,   L_EDG_I, _______, _______, _______, U_T_AGCR,_______, _______, _______, _______, _______,          _______, _______, _______, _______, \
         L_T_PTD, L_PTP,   L_BRD,   L_PTN,   L_EDG_D, _______, _______, L_RATIOD,L_RATIOI,_______, _______, _______, _______,                   _______, _______, _______, _______, \
         _______, L_T_MD,  L_T_ONF, _______, L_EDG_M, MD_BOOT, NK_TOGG, _______, _______, _______, _______, _______,                            _______, _______, _______,          \

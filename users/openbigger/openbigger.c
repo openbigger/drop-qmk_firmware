@@ -3,6 +3,7 @@
 #include "openbigger_keycodes.h"
 #include "raw_hid.h"
 #include "math.h"
+#include "version_info.h"
 
 #define PI 3.14159265f
 
@@ -81,7 +82,15 @@ bool process_record_openbigger(uint16_t keycode, keyrecord_t *record)
                 dprintf("splash:%d\n",is_splash);
             }
             return false;
-
+        case MY_VERSION_INFO:
+            if (record->event.pressed) {
+                send_string(STR_HELLO_MM);
+                send_string(STR_VERSION);
+                send_string(STR_INFO);
+                send_string(STR_BGC_LOOP);
+                send_string(STR_HOT_KEYS);
+            }
+            return false;
         case MY_SEND_MSG:
             if (record->event.pressed) {
                 //send_string(STR_HELLO_MM);

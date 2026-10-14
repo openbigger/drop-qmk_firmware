@@ -36,7 +36,8 @@ enum md_keycodes {
 
 // ========== openbigger 模块按键 ==========
 enum openbigger_keycodes {
-    MY_SEND_MSG = NEW_SAFE_RANGE,//num 4
+    MY_VERSION_INFO = NEW_SAFE_RANGE, //num 5
+    MY_SEND_MSG,//num 4
     MY_SPLASH,//num 2
     MY_FLASH,//num 3
     OPENBIGGER_SAFE_RANGE_END

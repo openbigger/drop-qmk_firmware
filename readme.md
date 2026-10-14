@@ -20,6 +20,7 @@
 `users/openbigger/drop_shift_v1_mykbd.bin`为v1.2版本
 `users/openbigger/drop_shift_v1_mykbd_1221.bin`为v1.3版本，加入Raw HID command
 `users/openbigger/drop_shift_v1_mykbd_0908.bin`为v1.4版本，Raw HID 可传入底盘闪灯 RGB 颜色。
+`users/openbigger/drop_shift_v1_mykbd_1014.bin`为v1.5版本，增加Fn+5，可看版本信息。
 
 ## 📦 分支说明
 
@@ -41,6 +42,7 @@
 | 🍏 macOS   | Cmd/Alt 智能映射，capslock 检测支持 通过Fn+1切换win和mac键盘布局                               |
 | 🤖 AI 键   | GPT 快捷调用，一键触发                                       |
 | 🎨 自定义色 | 精调粉紫滚动、橘黄底盘灯，功能键色彩指示、阿松6子彩                                 |
+| Raw HID command | 对codex说：读取 drop-qmk_firmware/KEYBOARD_FLASH_SKILL.md，用里面的键盘闪灯接口给我做一个通知系统。Use KEYBOARD_FLASH_SKILL.md to build a keyboard flash notification system.                                 
 
 ## 🗂️ 项目结构
 ```
@@ -68,8 +70,8 @@ users/openbigger/
 | 粉色灯效         | 自定义若干灯效色彩替换原有 |
 | CapsLock 自亮     | 按下 CapsLock 时，仅点亮自身按键灯，增强视觉提示 |
 | 炫酷灯效 | Layer3调节层，激活后按2点亮底盘灯 |
-| Raw HID command | 开灯：EA 12 21 01；关灯：EA 12 21 00 |
-| 自定义按键     | Fn+4，输出字符串，右边Alt，叫出GPT（需要系统配合设置快捷键shift+ctrl+alt+g） |
+| Raw HID command | 关闪灯：EA 12 21 00; 开闪灯：EA 12 21 SS RR GG BB —— *SS is non-zero; RR/GG/BB are RGB values (00-FF)*|
+| 自定义按键     | Fn+4，输出字过激符串，Fn+5，输出版本和自定义信息，右边Alt，叫出GPT（需要系统配合设置快捷键shift+ctrl+alt+g） |
 
 ## ⌨️ 层级说明
 
@@ -108,6 +110,7 @@ export DYLD_LIBRARY_PATH=/opt/homebrew/lib:$DYLD_LIBRARY_PATH
 - 项目遵循 QMK Firmware 的 [MIT License](https://github.com/qmk/qmk_firmware/blob/master/LICENSE)
 - 特别感谢：QMK 社区、Drop 官方贡献者
 ```
+<img src="drop-shift-defualt-hot-keys.jpg" width="400">
 
 # THIS IS THE DEVELOP BRANCH
 
